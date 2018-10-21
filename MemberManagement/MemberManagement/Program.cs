@@ -10,7 +10,6 @@ namespace MemberManagement
     {
         static void Main(string[] args)
         {
-
         }
     }
 }
