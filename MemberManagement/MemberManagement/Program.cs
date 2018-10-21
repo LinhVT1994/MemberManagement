@@ -10,6 +10,12 @@ namespace MemberManagement
     {
         static void Main(string[] args)
         {
+            Service service = new Service();
+            
+        }
+        public static void Execute()
+        {
+
         }
     }
 }
