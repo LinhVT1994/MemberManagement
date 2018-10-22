@@ -41,7 +41,7 @@ namespace MemberManagement
                     Console.WriteLine("This email is used to registered.");
                     // the email is registered.
 
-                    return RegisterStatus.Registered;
+                    return RegisterStatus.AccountRegistered;
                 case MemberManagement.ValidationInfo.EmailInvalid:
                     Console.WriteLine("The email address you entered is invalid.");
                     // the format of the entered email address is not correct.
@@ -50,7 +50,6 @@ namespace MemberManagement
                     return RegisterStatus.Fail;
             }
         }
-
         public RegisterStatus Register(Member newMember)
         {
             if (newMember.FirstName==null || newMember.LastName==null || newMember.EmailAddress ==null)
@@ -74,7 +73,7 @@ namespace MemberManagement
                 case MemberManagement.ValidationInfo.Registered:
                     Console.WriteLine("This email is used to registered.");
                     // the email is registered.
-                    return RegisterStatus.Registered;
+                    return RegisterStatus.AccountRegistered;
                 case MemberManagement.ValidationInfo.EmailInvalid:
                     Console.WriteLine("The email address you entered is invalid.");
                     // the format of the entered email address is not correct.
