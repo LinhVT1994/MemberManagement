@@ -10,10 +10,11 @@ namespace MemberManagement
 {
     enum RegisterStatus
     {
-        Unregistered,
-        Registered,
-        EmailInvalid,
+        Success, // The registering is success.
+        Fail,    // The registering is fail.
+        AccountRegistered, // The email is registered.
     }
+
     class Service
     {
         private Dictionary<string, Member> _MemberList = null;
@@ -21,47 +22,110 @@ namespace MemberManagement
         {
             _MemberList = new Dictionary<string, Member>();
         }
-        public void Register(string email)
+        public RegisterStatus Register(string firstName, string lastName, string email, string address = null, string phoneNumber = null)
         {
-            switch (CheckRegisteredStatus(email))
+            switch (EmailValidation(email))
             {
-                case RegisterStatus.Unregistered:
+                case MemberManagement.ValidationInfo.Unregistered:
                     // can register this email.
-                    break;
-                case RegisterStatus.Registered:
+                    Member member = CreateNewAccount(firstName, lastName, email, address, phoneNumber); // create a new account.
+                    if (member == null)
+                    {
+                        return RegisterStatus.Fail;
+                    }
+                    else
+                    {
+                        return RegisterStatus.Success;
+                    }
+                case MemberManagement.ValidationInfo.Registered:
+                    Console.WriteLine("This email is used to registered.");
                     // the email is registered.
-                    break;
-                case RegisterStatus.EmailInvalid:
-                    // the format of the entered email address is not correct.
 
-                    break;
+                    return RegisterStatus.Registered;
+                case MemberManagement.ValidationInfo.EmailInvalid:
+                    Console.WriteLine("The email address you entered is invalid.");
+                    // the format of the entered email address is not correct.
+                    return RegisterStatus.Fail;
                 default:
-                    break;
+                    return RegisterStatus.Fail;
             }
         }
-        private RegisterStatus CheckRegisteredStatus(string email)
+
+        public RegisterStatus Register(Member newMember)
+        {
+            if (newMember.FirstName==null || newMember.LastName==null || newMember.EmailAddress ==null)
+            {
+                return RegisterStatus.Fail;
+            }
+            else
+            {
+                if (newMember.FirstName.Length == 0 || newMember.LastName.Length == 0 || newMember.EmailAddress.Length == 0)
+                {
+                    return RegisterStatus.Fail;
+                }
+            }
+            switch (EmailValidation(newMember.EmailAddress))
+            {
+                case MemberManagement.ValidationInfo.Unregistered:
+                    // can register this email.
+                    Console.WriteLine("Please create a new account.");
+                    return RegisterStatus.Success;
+
+                case MemberManagement.ValidationInfo.Registered:
+                    Console.WriteLine("This email is used to registered.");
+                    // the email is registered.
+                    return RegisterStatus.Registered;
+                case MemberManagement.ValidationInfo.EmailInvalid:
+                    Console.WriteLine("The email address you entered is invalid.");
+                    // the format of the entered email address is not correct.
+                    return RegisterStatus.Fail;
+                default:
+                    return RegisterStatus.Fail;
+            }
+        }
+        /// <summary>
+        /// Create a new account.
+        /// </summary>
+        /// <param name="firstName">The first name.</param>
+        /// <param name="lastName">The last name.</param>
+        /// <param name="email">Email address.</param>
+        /// <param name="address">Address.</param>
+        /// <param name="phoneNumber">Phone number.</param>
+        public Member CreateNewAccount(string firstName, string lastName, string email, string address = null, string phoneNumber = null)
+        {
+            Member member = Member.Create(firstName, lastName, email, address, phoneNumber); // create a new member.
+            if (member == null)
+            {
+                return null;
+            }
+            else
+            {
+                _MemberList.Add(member.EmailAddress, member); // add the new member into the list member.
+                return member;
+            }
+        }
+        private ValidationInfo EmailValidation(string email)
         {
             if (email == null)
             {
-                return RegisterStatus.EmailInvalid;
+                return MemberManagement.ValidationInfo.EmailInvalid;
             }
-
             email = email.Trim(); // remove spaces at the first and last of the entered email to avoid  unexpected errors.
            
             // check whether the entered email is a valid email address.
             if (!IsEmailAddressValid(email)) 
             {
-                return RegisterStatus.EmailInvalid;
+                return MemberManagement.ValidationInfo.EmailInvalid;
             }
 
             // check whether the entered email has existed or not.
             if (_MemberList.ContainsKey(email))
             {
-                return RegisterStatus.Registered;
+                return MemberManagement.ValidationInfo.Registered;
             }
             else
             {
-                return RegisterStatus.Unregistered;
+                return MemberManagement.ValidationInfo.Unregistered;
             }
         }
         private bool IsEmailAddressValid(string email)

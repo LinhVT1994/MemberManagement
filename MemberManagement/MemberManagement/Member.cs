@@ -14,6 +14,30 @@ namespace MemberManagement
         private string _Address;  //　住所。
         private string _PhoneNumber; //　携帯電話番号。　
 
+        public Member()
+        {
+
+        }
+        public static Member Create(string fistName, string lastName, string emailAddress, string address, string phoneNumber)
+        {
+            if (fistName == null || lastName == null || emailAddress  == null)
+            {
+                return null;
+            }
+            else
+            {
+               return new Member(fistName, lastName, emailAddress, address, phoneNumber);
+            }
+        }
+        public Member(string fistName, string lastName, string emailAddress, string address, string phoneNumber)
+        {
+            FirstName = fistName;
+            LastName = lastName;
+            EmailAddress = emailAddress;
+            Address = address;
+            PhoneNumber = phoneNumber;
+        }
+
         /// <summary>
         /// Get fullname of a employee.
         /// </summary>
