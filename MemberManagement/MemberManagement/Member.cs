@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace MemberManagement
 {
@@ -13,10 +14,8 @@ namespace MemberManagement
         private string _EmailAddress; //　メールアドレス。
         private string _Address;  //　住所。
         private string _PhoneNumber; //　携帯電話番号。　
-
         public Member()
         {
-
         }
         public static Member Create(string fistName, string lastName, string emailAddress, string address, string phoneNumber)
         {
@@ -37,7 +36,6 @@ namespace MemberManagement
             Address = address;
             PhoneNumber = phoneNumber;
         }
-
         /// <summary>
         /// Get fullname of a employee.
         /// </summary>
@@ -47,7 +45,6 @@ namespace MemberManagement
         {
             return FullName;
         }
-
         #region Properties of a member.
         /// <summary>
         /// フルネーム
@@ -76,6 +73,7 @@ namespace MemberManagement
         /// <summary>
         /// 姓
         /// </summary>
+        [Required("This LastName field is required.")]
         public string LastName
         {
             get
@@ -87,10 +85,10 @@ namespace MemberManagement
                 _LastName = value;
             }
         }
-
         /// <summary>
         /// 名
         /// </summary>
+        [Required("This FirstName property is required.")]
         public string FirstName
         {
             get
@@ -105,6 +103,7 @@ namespace MemberManagement
         /// <summary>
         /// メールアドレス
         /// </summary>
+        [Required("This EmailAddress property is required.")]
         public string EmailAddress
         {
             get
