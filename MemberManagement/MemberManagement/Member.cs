@@ -113,7 +113,7 @@ namespace MemberManagement
             }
             set
             {
-                _EmailAddress = value;
+                _EmailAddress = value.Trim();
             }
         }
         /// <summary>
