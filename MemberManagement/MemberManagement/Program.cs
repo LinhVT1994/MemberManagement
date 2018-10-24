@@ -18,7 +18,7 @@ namespace MemberManagement
         {
             Service service = new Service();
             Console.WriteLine("---------------Add a new member.---------------");
-            Member member1 = new Member("", "Vu", "vulinh.hust@gmail.com", "Saitama-shi Minami-ku Minamiurawa", "01656994993");
+            Member member1 = new Member("Linh", "Vu", "vulinh.hust@gmail.com", "Saitama-shi Minami-ku Minamiurawa", "01656994993");
             Member result = service.Register(member1);
             if (result == null)
             {
