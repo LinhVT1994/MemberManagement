@@ -73,7 +73,7 @@ namespace MemberManagement
         /// <summary>
         /// 姓
         /// </summary>
-        [Required("This LastName field is required.")]
+        [Required]
         public string LastName
         {
             get
@@ -88,7 +88,7 @@ namespace MemberManagement
         /// <summary>
         /// 名
         /// </summary>
-        [Required("This FirstName property is required.")]
+        [Required]
         public string FirstName
         {
             get
@@ -103,7 +103,7 @@ namespace MemberManagement
         /// <summary>
         /// メールアドレス
         /// </summary>
-        [Required("This EmailAddress property is required.")]
+        [Required]
         public string EmailAddress
         {
             get

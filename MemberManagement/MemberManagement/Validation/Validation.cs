@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -36,19 +37,23 @@ namespace MemberManagement
         /// <returns>The true value if all of info is correct.</returns>
         public static bool InputValidation(Member member)
         {
-
-            if (member.FirstName == null || member.LastName == null || member.EmailAddress == null)
+            List<string> requiredPropaties = RequiredAttribute.GetRequiredProperties(member); // get required properties.
+            Type type = member.GetType();
+            string value = null;
+            foreach (string str in requiredPropaties)
             {
-                return false;
-            }
-            else
-            {
-                if (member.FirstName.Length == 0 || member.LastName.Length == 0 || member.EmailAddress.Length == 0)
+                value = (string)GetPropValue(member, str);
+                if (value == null || value.Length == 0)
                 {
                     return false;
                 }
             }
             return true;
         }
+        public static object GetPropValue(object src, string propName)
+        {
+            return src.GetType().GetProperty(propName).GetValue(src, null);
+        }
+
     }
 }
