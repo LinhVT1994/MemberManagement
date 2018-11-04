@@ -5,23 +5,29 @@ using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
 namespace MemberManagement
 {
-    enum RegisterErrorStatus
+    /// <summary>
+    /// 1. 
+    /// 
+    /// To register a new member FirstName, LastName and EmailAddress are required.
+    /// The email must be a valid email address.
+    /// </summary>
+    enum ErrorStatus
     {
         None,
-        Registered, // The email is registered.
-        EmailInvalid,
-        InfoNotEnough,
+        NotExist,
+        Exist, // The email has already registered.
+        EmailInvalid, // The email address is invalid.
+        InfoNotEnough, // The info to register is not enough.
     }
     class Service
     {
         private Dictionary<string, Member> _MemberList = null;
-        private RegisterErrorStatus _ErrorStatus = RegisterErrorStatus.None;
+        private ErrorStatus _ErrorStatus = ErrorStatus.None;
         public Service()
         {
-            _MemberList = new Dictionary<string, Member>();
+            _MemberList = new Dictionary<string, Member>(); // create a new member list.
         }
         /// <summary>
         /// Register a new member.
@@ -60,22 +66,22 @@ namespace MemberManagement
         {
             if (member == null)
             {
-                ErrorStatus = RegisterErrorStatus.InfoNotEnough;
+                ErrorStatus = ErrorStatus.InfoNotEnough;
                 return false;
             }
             if (!Validation.InputValidation(member))
             {
-                ErrorStatus = RegisterErrorStatus.InfoNotEnough;
+                ErrorStatus = ErrorStatus.InfoNotEnough;
                 return false;
             }
             if (!Validation.EmailValidation(member.EmailAddress))
             {
-                ErrorStatus = RegisterErrorStatus.EmailInvalid;
+                ErrorStatus = ErrorStatus.EmailInvalid;
                 return false;
             }
             if (IsExist(member.EmailAddress))
             {
-                ErrorStatus = RegisterErrorStatus.Registered;
+                ErrorStatus = ErrorStatus.Exist;
                 return false;
             }
             return true;
@@ -101,6 +107,40 @@ namespace MemberManagement
                 _MemberList.Add(member.EmailAddress, member); // add the new member into the list member.
                 return member;
             }
+        }
+        public bool Withdrawal(string email)
+        {
+            email = email.Trim(); // eliminate spaces at the first and last of the email to avoid unexpected errors.
+            if (!Validation.EmailValidation(email))
+            {
+                ErrorStatus = ErrorStatus.EmailInvalid;
+                return false;
+            }
+            if (IsExist(email)) // if the email has already registered.(exist)
+            {
+                return RemoveAMember(email);
+            }
+            else
+            {
+                ErrorStatus = ErrorStatus.NotExist;
+                return false;
+            }
+            
+        }
+        private bool RemoveAMember(string email)
+        {
+            if (email==null)
+            {
+                ErrorStatus = ErrorStatus.EmailInvalid;
+                return false;
+            }
+            if (!Validation.EmailValidation(email))
+            {
+                ErrorStatus = ErrorStatus.EmailInvalid;
+                return false;
+            }
+            return _MemberList.Remove(email);
+            
         }
         /// <summary>
         /// Add a new memmber.
@@ -146,7 +186,7 @@ namespace MemberManagement
         /// <summary>
         /// The status of registering an new account.
         /// </summary>
-        public RegisterErrorStatus ErrorStatus
+        public ErrorStatus ErrorStatus
         {
             get
             {
@@ -155,6 +195,14 @@ namespace MemberManagement
             private set
             {
                 _ErrorStatus = value;
+            }
+        }
+
+        public int NumberOfMembers
+        {
+            get
+            {
+                return _MemberList.Count;
             }
         }
     }
